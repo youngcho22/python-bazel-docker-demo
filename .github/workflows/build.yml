@@ -17,6 +17,8 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Build
+      env:
+        PYTHON_KEYRING_BACKEND: keyring.backends.null.Keyring
       run: |
         bazel build //...
         bazel test //...
