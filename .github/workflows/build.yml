@@ -9,7 +9,7 @@ jobs:
       matrix:
         os:
         - ubuntu-22.04
-        - macos-11.7
+        - macos-11
 
     runs-on: ${{ matrix.os }}
 
