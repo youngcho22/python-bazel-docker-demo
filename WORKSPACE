@@ -85,9 +85,9 @@ poetry_deps()
 load("@com_sonia_rules_poetry//rules_poetry:poetry.bzl", "poetry")
 
 poetry(
-  name = "poetry_app",
-  lockfile = "//app:poetry.lock",
-  pyproject = "//app:pyproject.toml",
+  name = "poetry",
+  lockfile = "//:poetry.lock",
+  pyproject = "//:pyproject.toml",
 )
 
 container_pull(

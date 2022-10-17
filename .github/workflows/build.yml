@@ -14,10 +14,19 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
+    - name: Install Poetry
+      run: pipx install poetry
+
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.9.12'
+        cache: 'poetry'
+
     - uses: actions/checkout@v2
 
     - name: Build
       env:
         PYTHON_KEYRING_BACKEND: keyring.backends.null.Keyring
       run: |
+        poetry build
         bazel build //...
