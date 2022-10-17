@@ -1,5 +1,5 @@
 load("@rules_python//python:defs.bzl", "py_binary")
-load("@poetry//:dependencies.bzl", "dependency")
+load("@poetry_demo//:dependencies.bzl", "dependency")
 load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
 load("@io_bazel_rules_docker//container:container.bzl", "container_image")
 load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
@@ -7,7 +7,10 @@ load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
 py_binary(
   name = "app",
   main = "main.py",
-  srcs = [ "main.py" ],
+  srcs = [ 
+    "__init__.py", 
+    "main.py", 
+  ],
   deps = [
     dependency("colorama"),
   ],
@@ -23,9 +26,9 @@ pkg_tar(
   package_dir = "app.runfiles/__main__",
   symlinks = {
     "app.runfiles/bazel_tools": "__main__/external/bazel_tools",
-    "app.runfiles/poetry_app": "__main__/external/poetry_app",
+    "app.runfiles/poetry_demo": "__main__/external/poetry_demo",
   },
-  strip_prefix = "/",
+  strip_prefix = package_name(),
 )
 
 pkg_tar(

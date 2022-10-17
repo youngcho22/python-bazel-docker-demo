@@ -3,25 +3,28 @@
 To run the app with Bazel:
 
 ```bash
-bazel run //app
+bazel run //demo/app
+
+# Same as
+# bazel run //demo/app:app
 ```
 
 To build the Docker image with Bazel:
 
 ```bash
-bazel build //app:image
+bazel build //demo/app:image
 ```
 
 To run the Docker image locally:
 
 ```bash
-bazel run //app:image
-docker run --rm bazel/app:image
+bazel run //demo/app:image
+docker run --rm bazel/demo/app:image
 ```
 
 To inspect the Docker image:
 
 ```bash
-bazel run //app:image
-docker run --rm -it --entrypoint /bin/sh bazel/app:image
+bazel run //demo/app:image
+docker run --rm -it --entrypoint /bin/sh bazel/demo/app:image
 ```

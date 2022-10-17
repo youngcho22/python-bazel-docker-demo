@@ -28,5 +28,5 @@ jobs:
       env:
         PYTHON_KEYRING_BACKEND: keyring.backends.null.Keyring
       run: |
-        poetry build
+        (cd ./demo && poetry build)
         bazel build //...
