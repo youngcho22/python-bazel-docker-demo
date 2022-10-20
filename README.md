@@ -3,28 +3,31 @@
 To run the app with Bazel:
 
 ```bash
-bazel run //app/app
+bazel run //fibonacci:app
+```
 
-# Same as
-# bazel run //app/app:app
+To run all tests with Bazel:
+
+```bash
+bazel test //...
 ```
 
 To build the Docker image with Bazel:
 
 ```bash
-bazel build //app/app:image
+bazel build //fibonacci:image
 ```
 
 To run the Docker image locally:
 
 ```bash
-bazel run //app/app:image
-docker run --rm bazel/app/app:image
+bazel run //fibonacci:image
+docker run --rm bazel/fibonacci:image
 ```
 
 To inspect the Docker image:
 
 ```bash
 bazel run //app/app:image
-docker run --rm -it --entrypoint /bin/sh bazel/app/app:image
+docker run --rm -it --entrypoint /bin/sh bazel/fibonacci:image
 ```

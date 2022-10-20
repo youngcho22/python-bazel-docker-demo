@@ -27,5 +27,6 @@ jobs:
       env:
         PYTHON_KEYRING_BACKEND: keyring.backends.null.Keyring
       run: |
-        (cd ./app && poetry build)
+        (cd ./fibonacci && poetry build && poetry run pytest)
         bazel build //...
+        bazel test //...

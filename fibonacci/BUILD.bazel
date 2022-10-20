@@ -1,0 +1,98 @@
+load("@poetry_fibonacci//:dependencies.bzl", "dependency")
+load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
+load("@rules_python//python:defs.bzl", "py_library", "py_binary")
+load("@io_bazel_rules_docker//container:container.bzl", "container_image")
+load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
+
+py_library(
+  name = "fibonacci",
+  srcs = glob([
+    "fibonacci/*.py",
+  ]),
+  imports = ["."],
+  deps = [
+    dependency("colorama"),
+  ],
+  visibility = [
+    "//visibility:public",
+  ],
+)
+
+py_binary(
+  name = "app",
+  srcs = [
+    "app.py",
+  ],
+  main = "app.py",
+  deps = [
+    ":fibonacci",
+  ],
+)
+
+pkg_tar(
+  name = "app_runfiles",
+  srcs = [
+    ":app",
+  ],
+  extension = "tar.gz",
+  include_runfiles = True,
+  package_dir = "app.runfiles/__main__/" + package_name(),
+  strip_prefix = ".",
+)
+
+pkg_tar(
+  name = "root_runfiles",
+  srcs = [
+    ":app",
+  ],
+  extension = "tar.gz",
+  include_runfiles = True,
+  package_dir = "app.runfiles/__main__",
+  strip_prefix = ".",
+  symlinks = {
+    "app.runfiles/bazel_tools": "__main__/external/bazel_tools",
+    "app.runfiles/poetry_fibonacci": "__main__/external/poetry_fibonacci",
+  },
+)
+
+pkg_tar(
+  name = "app_without_runfiles",
+  srcs = [
+    ":app",
+  ],
+  extension = "tar.gz",
+  include_runfiles = False,
+  strip_prefix = ".",
+)
+
+pkg_tar(
+  name = "app_bundle",
+  deps = [
+    ":app_without_runfiles",
+    ":app_runfiles",
+    ":root_runfiles",
+  ],
+  extension = "tar.gz",
+  include_runfiles = False,
+  package_dir = "/opt/app",
+  strip_prefix = ".",
+)
+
+container_image(
+  name = "image",
+  base = "@python//image",
+  tars = [
+    ":app_bundle",
+  ],
+  cmd = [
+    "/opt/app/app",
+  ],
+)
+
+copy_file(
+  name = "image_tar",
+  src = ":image.tar",
+  out = "app.tar",
+  is_executable = False,
+  allow_symlink = True,
+)

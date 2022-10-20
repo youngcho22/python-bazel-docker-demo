@@ -1,0 +1,15 @@
+load("@poetry_pytest//:dependencies.bzl", "dependency")
+
+py_test(
+  name = "tests",
+  srcs = [
+    "__init__.py",
+    "test_fibonacci.py",
+  ],
+  main = "test_fibonacci.py",
+  legacy_create_init = 0,
+  deps = [
+    dependency("pytest"),
+    "//fibonacci",
+  ],
+)

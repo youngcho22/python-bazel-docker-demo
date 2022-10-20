@@ -73,9 +73,7 @@ http_archive(
   name = "com_sonia_rules_poetry",
   sha256 = "8a7a6a5d2ef859ba4309929f3b4d61031f2a4bfed6f450f04ab09443246a4b5c",
   strip_prefix = "rules_poetry-ecd0d9c66b89403667304b11da3bd99764797a63",
-  urls = [
-    "https://github.com/soniaai/rules_poetry/archive/ecd0d9c66b89403667304b11da3bd99764797a63.tar.gz",
-  ],
+  urls = ["https://github.com/soniaai/rules_poetry/archive/ecd0d9c66b89403667304b11da3bd99764797a63.tar.gz"],
 )
 
 load("@com_sonia_rules_poetry//rules_poetry:defs.bzl", "poetry_deps")
@@ -85,9 +83,15 @@ poetry_deps()
 load("@com_sonia_rules_poetry//rules_poetry:poetry.bzl", "poetry")
 
 poetry(
-  name = "poetry_app",
-  lockfile = "//:app/poetry.lock",
-  pyproject = "//:app/pyproject.toml",
+  name = "poetry_pytest",
+  lockfile = "//pytest:poetry.lock",
+  pyproject = "//pytest:pyproject.toml",
+)
+
+poetry(
+  name = "poetry_fibonacci",
+  lockfile = "//fibonacci:poetry.lock",
+  pyproject = "//fibonacci:pyproject.toml",
 )
 
 container_pull(

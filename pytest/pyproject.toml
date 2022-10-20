@@ -1,14 +1,14 @@
 [tool.poetry]
-name = "app"
+name = "pytest"
 version = "0.1.0"
 description = ""
-authors = ["njlr"]
-license = "MIT"
+authors = ["njlr <njlr@users.noreply.github.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-colorama = "^0.4.5"
+pytest = "^7.1.3"
+
 
 [build-system]
 requires = ["poetry-core"]
