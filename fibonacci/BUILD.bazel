@@ -1,4 +1,4 @@
-load("@poetry_fibonacci//:dependencies.bzl", "dependency")
+load("@pypi_deps//:requirements.bzl", "requirement")
 load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
 load("@rules_python//python:defs.bzl", "py_library", "py_binary")
 load("@io_bazel_rules_docker//container:container.bzl", "container_image")
@@ -11,22 +11,35 @@ py_library(
   ]),
   imports = ["."],
   deps = [
-    dependency("colorama"),
+    requirement("colorama"),
   ],
-  visibility = [
-    "//visibility:public",
-  ],
+  visibility = ["//visibility:public"],
 )
 
 py_binary(
   name = "app",
   srcs = [
-    "app.py",
+    "hello.py",
   ],
-  main = "app.py",
+  main = "hello.py",
   deps = [
     ":fibonacci",
   ],
+  imports = ["."],
+  legacy_create_init = False,
+  visibility = ["//visibility:public"],
+)
+
+sh_binary(
+    name = "start_flask",
+    srcs = ["start-app.sh"],
+    data = [
+        "//fibonacci/main:flask_main",
+    ],
+    deps = [
+        "@bazel_tools//tools/bash/runfiles",
+    ],
+    visibility = ["//visibility:public"],
 )
 
 pkg_tar(
@@ -51,7 +64,17 @@ pkg_tar(
   strip_prefix = ".",
   symlinks = {
     "app.runfiles/bazel_tools": "__main__/external/bazel_tools",
-    "app.runfiles/poetry_fibonacci": "__main__/external/poetry_fibonacci",
+    "app.runfiles/pypi_deps_blinkier": "__main__/external/pypi_deps_blinkier",
+    "app.runfiles/pypi_deps_click": "__main__/external/pypi_deps_click",
+    "app.runfiles/pypi_deps_colorama": "__main__/external/pypi_deps_colorama",
+    "app.runfiles/pypi_deps_flask": "__main__/external/pypi_deps_flask",
+    "app.runfiles/pypi_deps_importlib_metadata": "__main__/external/pypi_deps_importlib_metadata",
+    "app.runfiles/pypi_deps_itsdangerous": "__main__/external/pypi_deps_itsdangerous",
+    "app.runfiles/pypi_deps_jinja2": "__main__/external/pypi_deps_jinja2",
+    "app.runfiles/pypi_deps_markupsafe": "__main__/external/pypi_deps_markupsafe",
+    "app.runfiles/pypi_deps_werkzeug": "__main__/external/pypi_deps_werkzeug",
+    "app.runfiles/pypi_deps_zipp": "__main__/external/pypi_deps_zipp",
+    "app.runfiles/python3_9_x86_64-apple-darwin": "__main__/external/python3_9_x86_64-apple-darwin",
   },
 )
 
@@ -87,12 +110,4 @@ container_image(
   cmd = [
     "/opt/app/app",
   ],
-)
-
-copy_file(
-  name = "image_tar",
-  src = ":image.tar",
-  out = "app.tar",
-  is_executable = False,
-  allow_symlink = True,
 )

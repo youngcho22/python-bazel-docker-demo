@@ -1,0 +1,13 @@
+load("@pypi_deps//:requirements.bzl", "requirement")
+
+py_binary(
+    name = "flask_main",
+    srcs = ["flask_main.py"],
+    imports = ["."],
+    legacy_create_init = False,
+    visibility = ["//visibility:public"],
+    deps = [
+        "//fibonacci:app",
+        requirement("flask"),
+    ],
+)
