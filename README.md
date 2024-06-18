@@ -1,15 +1,9 @@
 # python-bazel-docker-app
 
-To run the app with Bazel:
+To run the flask app with Bazel:
 
 ```bash
-bazel run //fibonacci:app
-```
-
-To run all tests with Bazel:
-
-```bash
-bazel test //...
+bazel run //fibonacci:start_flask
 ```
 
 To build the Docker image with Bazel:
@@ -21,13 +15,8 @@ bazel build //fibonacci:image
 To run the Docker image locally:
 
 ```bash
-bazel run //fibonacci:image
-docker run --rm bazel/fibonacci:image
+bazel run //fibonacci:image <-- This doesn't at the moment.
+docker run --rm bazel/fibonacci:image <-- This doesn't at the moment.
 ```
-
-To inspect the Docker image:
-
-```bash
-bazel run //app/app:image
-docker run --rm -it --entrypoint /bin/sh bazel/fibonacci:image
-```
+## Issues at the moment
+When packaging the sh_binary target, not every external dependency is copied over to the final bundle which is `//fibonacci:app_bundle`.

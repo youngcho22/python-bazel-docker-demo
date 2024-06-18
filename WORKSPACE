@@ -1,5 +1,14 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
+
+http_archive(
+    name = "rules_python",
+    sha256 = "d70cd72a7a4880f0000a6346253414825c19cdd40a28289bdf67b8e6480edff8",
+    strip_prefix = "rules_python-0.28.0",
+    url = "https://github.com/bazelbuild/rules_python/releases/download/0.28.0/rules_python-0.28.0.tar.gz",
+)
+
+
 http_archive(
   name = "io_bazel_rules_go",
   sha256 = "099a9fb96a376ccbbb7d291ed4ecbdfd42f6bc822ab77ae6f1b5cb9e914e94fa",
@@ -62,37 +71,30 @@ load("@bazel_skylib//:workspace.bzl", "bazel_skylib_workspace")
 
 bazel_skylib_workspace()
 
-http_archive(
-  name = "rules_python",
-  sha256 = "8c8fe44ef0a9afc256d1e75ad5f448bb59b81aba149b8958f02f7b3a98f5d9b4",
-  strip_prefix = "rules_python-0.13.0",
-  url = "https://github.com/bazelbuild/rules_python/archive/refs/tags/0.13.0.tar.gz",
+
+load("@rules_python//python:repositories.bzl", "py_repositories", "python_register_toolchains")
+
+py_repositories()
+
+python_register_toolchains(
+    name = "python3_9",
+    ignore_root_user_error = True,
+    python_version = "3.9.17",
+    register_coverage_tool = True,
 )
 
-http_archive(
-  name = "com_sonia_rules_poetry",
-  sha256 = "8a7a6a5d2ef859ba4309929f3b4d61031f2a4bfed6f450f04ab09443246a4b5c",
-  strip_prefix = "rules_poetry-ecd0d9c66b89403667304b11da3bd99764797a63",
-  urls = ["https://github.com/soniaai/rules_poetry/archive/ecd0d9c66b89403667304b11da3bd99764797a63.tar.gz"],
+load("@python3_9//:defs.bzl", "interpreter")
+load("@rules_python//python:pip.bzl", "pip_parse")
+
+pip_parse(
+    name = "pypi_deps",
+    python_interpreter_target = interpreter,
+    requirements_linux = "//:requirements.txt",
+    requirements_lock = "//:requirements.txt",
 )
 
-load("@com_sonia_rules_poetry//rules_poetry:defs.bzl", "poetry_deps")
-
-poetry_deps()
-
-load("@com_sonia_rules_poetry//rules_poetry:poetry.bzl", "poetry")
-
-poetry(
-  name = "poetry_pytest",
-  lockfile = "//pytest:poetry.lock",
-  pyproject = "//pytest:pyproject.toml",
-)
-
-poetry(
-  name = "poetry_fibonacci",
-  lockfile = "//fibonacci:poetry.lock",
-  pyproject = "//fibonacci:pyproject.toml",
-)
+load("@pypi_deps//:requirements.bzl", "install_deps")
+install_deps()
 
 container_pull(
   name = "python",
