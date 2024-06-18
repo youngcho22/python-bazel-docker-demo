@@ -17,7 +17,7 @@ py_library(
 )
 
 py_binary(
-  name = "app",
+  name = "hello",
   srcs = [
     "hello.py",
   ],
@@ -31,7 +31,7 @@ py_binary(
 )
 
 sh_binary(
-    name = "start_flask",
+    name = "app",
     srcs = ["start-app.sh"],
     data = [
         "//fibonacci/main:flask_main",
@@ -64,7 +64,7 @@ pkg_tar(
   strip_prefix = ".",
   symlinks = {
     "app.runfiles/bazel_tools": "__main__/external/bazel_tools",
-    "app.runfiles/pypi_deps_blinkier": "__main__/external/pypi_deps_blinkier",
+    "app.runfiles/pypi_deps_blinker": "__main__/external/pypi_deps_blinker",
     "app.runfiles/pypi_deps_click": "__main__/external/pypi_deps_click",
     "app.runfiles/pypi_deps_colorama": "__main__/external/pypi_deps_colorama",
     "app.runfiles/pypi_deps_flask": "__main__/external/pypi_deps_flask",

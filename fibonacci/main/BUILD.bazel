@@ -7,7 +7,7 @@ py_binary(
     legacy_create_init = False,
     visibility = ["//visibility:public"],
     deps = [
-        "//fibonacci:app",
+        "//fibonacci:hello",
         requirement("flask"),
     ],
 )
